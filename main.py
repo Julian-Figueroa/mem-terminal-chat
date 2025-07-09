@@ -6,7 +6,7 @@ from langchain.prompts import (
 )
 from langchain_openai import ChatOpenAI
 from langchain.chains import LLMChain, ConversationalRetrievalChain
-from langchain.memory import ConversationBufferMemory
+from langchain.memory import ConversationBufferMemory, ConversationSummaryMemory
 from langchain_community.chat_message_histories import FileChatMessageHistory
 
 load_dotenv()
@@ -14,12 +14,13 @@ load_dotenv()
 
 def main():
     # LLM
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0, verbose=True)
     # Memory
-    memory = ConversationBufferMemory(
+    memory = ConversationSummaryMemory(
         memory_key="messages",
         return_messages=True,
-        chat_memory=FileChatMessageHistory("messages.json"),
+        llm=llm,
+        # chat_memory=FileChatMessageHistory("messages.json"),
     )
     # Prompt template for the chat
     prompt = ChatPromptTemplate(
